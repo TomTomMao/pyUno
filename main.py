@@ -12,7 +12,7 @@ def main():
     programRunning = True
 
     while programRunning:
-        screen = pygame.display.set_mode((1440, 810))
+        screen = pygame.display.set_mode((1500, 750))
 
         # run start menu loop, waiting for user choose how many player is it.
         startMenu = StartMenu(screen)

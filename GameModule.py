@@ -2,6 +2,8 @@ import random
 import pygame
 from LabelModule import Label
 from pygame.locals import *
+import time
+from UserInterface import UserInterface
 
 
 class CardBase:
@@ -15,6 +17,11 @@ class CardBase:
             Return False otherwise
         '''
         return topDiscardCard.type == cardToPlay.type or topDiscardCard.cardColour == cardToPlay.cardColour
+
+    def getImage(self):
+        '''
+            return an image object
+        '''
 
 
 class NumberCard(CardBase):
@@ -409,7 +416,10 @@ class Game:
             # Set the current player
             self.currentPlayerIndex = (
                 self.currentPlayerIndex + 1) % self.countPlayer
-            currentPlayer: Player = self.players[self.currentPlayerIndex]
+            self.currentPlayer: Player = self.players[self.currentPlayerIndex]
+            currentPlayer = self.currentPlayer
+            # self.userInterFace.renderOutput("computer is playing")
+            # time.sleep(1)
             print(f"\n\n\n\n\n{currentPlayer.getID()}'s turn start")
             #
             #
@@ -449,12 +459,16 @@ class Game:
                 # ***************rendering animation start***************
                 if currentPlayer.isHuman:
                     # this could be pygame animation
-                    print(
-                        f"you swapped a card, old card: {str(cardToSwap)}, new card: {str(cardSwapped)}, cards are moving...")
+                    self.userInterFace.renderOutput(
+                        f"you swapped a card, old card: {str(cardToSwap)}, new card: {str(cardSwapped)}")
+                    time.sleep(3)
+
                 # this could be pygame animation
                 else:
-                    print(
-                        f"player{currentPlayer.getID()} swapped a card, cards are moving...")
+                    self.userInterFace.renderOutput(
+                        f"{currentPlayer.getID()} swapped a card")
+                    time.sleep(3)
+
             # ***************rendering animation over***************
             #
             #
@@ -487,11 +501,13 @@ class Game:
                 #
                 # 2.1***************rendering animation start***************
                 if currentPlayer.isHuman:
-                    print(
-                        f"Your played this card: {str(cardToPlay)} card is moving from your hand to the discard pile...")  # this could be animiation
+                    self.userInterFace.renderOutput(
+                        f"Your played this card: {str(cardToPlay)}")
+                    time.sleep(3)
                 else:
-                    print(
-                        f"computer:{currentPlayer} played this card: {str(cardToPlay)} card is moving from computer's hand to the discard pile...")  # this could be animiation
+                    self.userInterFace.renderOutput(
+                        f"{currentPlayer.getID()} played this card: {str(cardToPlay)}")
+                    time.sleep(3)
 
                 # 2.1***************rendering animation end***************
                 # if there is a winner, loop end; other wise keep looping
@@ -551,6 +567,7 @@ class Game:
                             pass
                     else:  # player don't play a second card
                         print("---------------------flag3---------------------")
+
                         pass  # go next loop
 
             print(f"{currentPlayer.getID()}'s turn end\n\n\n\n\n")
@@ -559,76 +576,23 @@ class Game:
         # game over, return result
 
     def getResult(self):
-        return self
+        winner = [player for player in self.players if len(
+            player.cards) == 0][0]
+        losers = [player for player in self.players if len(player.cards) != 0]
+        returnValue = {
+            "winner": [{"ID": winner.getID()}],
+            "losers": [{"ID": loser.getID(), "score": loser.getScore(), "cards": loser.cards} for loser in losers]
+        }
 
+        return returnValue
+        # returnValue looks like this:{"winner":[{"ID":"player1"}],
+        #                              "losers":[
+        #                                        {"ID":"player0", "score":5, "cards":[CardBaseObject1, CardBaseObject2]},
+        #                                        {"ID":"player1", "score":15, "cards":[CardBaseObject5, CardBaseObject25]}......
+        #                                       ]
+        #                             }
 
-class UserInterface:
-    def __init__(self, game: Game):
-        self.game = game
-        self.screen = self.game.screen
-
-    def waitUserInput(self, candidateInput: list, hint):
-        print("it is your turn to:"+hint)
-        while True:
-            for event in pygame.event.get():
-                if event.type == QUIT:
-                    pygame.quit()
-                if event.type == KEYDOWN:
-                    if event.unicode in candidateInput:
-                        return event.unicode
-
-            self.renderOutput("it is your turn to:"+hint)
-
-    def renderHint(self, hint):
-        hintLabel = Label(hint, (50, 50), 50, "black")
-        hintLabel.draw(self.screen)
-
-    def renderKeyInfo(self):
-        hintLabel = Label("press 1 to 9 choose chard", (600, 50), 50, "black")
-        hintLabel.draw(self.screen)
-        hintLabel2 = Label(
-            "press 0 draw a card or skip the turn", (600, 100), 50, "black")
-        hintLabel2.draw(self.screen)
-
-    def renderPlayersCards(self):
-        y = 200
-        for player in self.game.players:
-            if player.isHuman:
-                colour = "Black"
-            else:
-                colour = "Red"
-            playerLable = Label(
-                player.getID() + ": " + str(player.cards), (50, y), 25, colour
-            )
-            playerLable.draw(self.screen)
-            y += 20
-
-    def renderDrawPile(self):
-        drawPileLable = Label("drawPile: TOPCARD IS ??", (50, 500), 30, "blue")
-        drawPileCountLable = Label(
-            f"Number of Cards in DrawPile: {self.game.drawPile.count()}", (50, 550), 30, "blue")
-        drawPileLable.draw(self.screen)
-        drawPileCountLable.draw(self.screen)
-
-    def renderDiscardPile(self):
-        discardPileLabel = Label(
-            f"Top Card of Discard Pile: {self.game.discardPile.showTopCard()}", (400, 500), 30, "blue")
-        discardPileLabel.draw(self.screen)
-
-    def renderOutput(self, hint):
-        screen = self.game.screen
-
-        screen.fill(pygame.Color("gray"))  # draw background
-        self.renderKeyInfo()
-        self.renderPlayersCards()
-        self.renderDrawPile()
-        self.renderDiscardPile()
-        self.renderHint(hint)
-
-        pygame.display.flip()
-
-
-# screen = pygame.display.set_mode((800, 600))
-# game = Game(screen, 7)
+# screen = pygame.display.set_mode((1500, 900))
+# game = Game(screen, 2)
 # game.initialize()
 # game.run()
