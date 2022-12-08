@@ -5,7 +5,7 @@ from pygame.locals import *
 import time
 from UserInterface import UserInterface
 
-
+SLEEPTIME=0.1
 class CardBase:
     def __init__(self) -> None:
         pass
@@ -16,12 +16,38 @@ class CardBase:
             Return True if it is legal
             Return False otherwise
         '''
-        return topDiscardCard.type == cardToPlay.type or topDiscardCard.cardColour == cardToPlay.cardColour
+
+        if cardToPlay.cardColour == "black":
+                return True
+        if topDiscardCard.cardColour!="black":            
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!a")
+            print("top: cardColour:",topDiscardCard.cardColour)
+            print("top: chosenColour:",topDiscardCard.chosenColour)
+            print("toplay: cardColour:",cardToPlay.cardColour)
+            print("toplay: chosenColour:",cardToPlay.chosenColour)
+            print(topDiscardCard.type == cardToPlay.type or topDiscardCard.cardColour == cardToPlay.cardColour)
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!a")
+            return topDiscardCard.type == cardToPlay.type or topDiscardCard.cardColour == cardToPlay.cardColour
+        else: 
+            
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!b")
+            print("top: cardColour:",topDiscardCard.cardColour)
+            print("top: chosenColour:",topDiscardCard.chosenColour)
+            print("toplay: cardColour:",cardToPlay.cardColour)
+            print("toplay: chosenColour:",cardToPlay.chosenColour)
+            print(topDiscardCard)
+            print(cardToPlay)
+            print(topDiscardCard.type == cardToPlay.type or topDiscardCard.chosenColour == cardToPlay.cardColour)
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!b")
+            return topDiscardCard.type == cardToPlay.type or topDiscardCard.chosenColour == cardToPlay.cardColour
+
 
     def getImage(self):
         '''
             return an image object
         '''
+    
+
 
 
 class NumberCard(CardBase):
@@ -31,14 +57,26 @@ class NumberCard(CardBase):
         # cardID: a number
 
         self.cardColour = cardColour  # a string
+        self.chosenColour = cardColour # string
         self.type = cardType  # a string
         self.cardID = "card" + str(cardID)  # a string
         self.value = {'green': 1, 'red': 2, 'yellow': 3,
-                      'blue': 4}[cardColour]*int(self.type)
+                      'blue': 4, 'black':5}[cardColour]*{"0":0,"1":1,"2":2,"3":3,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9,"add2":15,"forbid":15,"turn":15,"add4":30,"change":30}[cardType]
 
     def __repr__(self):
-        return self.cardColour + "-" + self.type
+        if self.cardColour == "black":
+            chosenColourInfo = "-"+self.chosenColour
+        else:
+            chosenColourInfo = ""
+        return self.cardColour + "-" + self.type + chosenColourInfo
 
+    def choseColour(self, newColour: str):
+        '''
+            newColour: red, blue, green or yellow
+            Assume self.colour == "black"
+            change self.chosenColour to the new Colour
+        '''
+        self.chosenColour = newColour
 
 class Owner:
     '''
@@ -102,19 +140,30 @@ class Player(Owner):
             If play a card, return the valid card player choosed
             If choose not to play a card, return False
         '''
-        if self.isHuman == False:
+        if self.isHuman == False: # AI
             print(self.playerID + "is playing card")
             validCards = [card for card in self.cards if CardBase.checkCard(
                 topDiscardCard, card)]
             if len(validCards) > 0:
                 cardToPlay = random.choice(validCards)
+                if cardToPlay.cardColour == "black":
+                    cardToPlay.choseColour(random.choice(["red","blue","green","yellow"]))
                 print(self.playerID + f"decide to play {cardToPlay}")
+                if cardToPlay.type == "turn":
+                    game.changeDirection()
+                if cardToPlay.type == "forbid":
+                    game.forbidNextPlayer()
+                if cardToPlay.type == "add2":
+                    game.giveNextPlayerCards(2)
+                if cardToPlay.type == "add4":
+                    game.giveNextPlayerCards(4)
                 return cardToPlay
             else:
                 print(self.playerID +
                       "decide not to play any card, and it would draw a card")
                 return False
-        while True:
+
+        while True: # user
             userInput = userInterface.waitUserInput(
                 [str(i) for i in range(0, 10)], "play a card."
             )
@@ -125,6 +174,16 @@ class Player(Owner):
                 cardToPlay = self.cards[indexOfCard - 1]
                 print("cardToPlay:", cardToPlay)
                 if CardBase.checkCard(topDiscardCard, cardToPlay):
+                    if (cardToPlay.cardColour=="black"):
+                        cardToPlay.choseColour(userInterface.waitUserChooseColour())
+                    if cardToPlay.type == "turn":
+                        game.changeDirection()
+                    if cardToPlay.type == "forbid":
+                        game.forbidNextPlayer()
+                    if cardToPlay.type == "add2":
+                        game.giveNextPlayerCards(2)
+                    if cardToPlay.type == "add4":
+                        game.giveNextPlayerCards(4)
                     return cardToPlay
 
 
@@ -313,19 +372,35 @@ class Game:
     def givePlayerCard(self, player: Player):
         '''
             player: a Player object.
-            assume self.drawpile is not None
+            # assume self.drawpile is not None (not use this)
             assume there is at least a card in the self.drawPile
             assume self.discardPile is not None
-            remove the first card from self.drawPile
+            Shuffle the cards of self.discardPile except the top one., put them into the self.drawPile, if len(self.drawPile) = 5, 
+            Remove the first card from self.drawPile
             Delete the ownership between this card and the self.draWPile
             Assign the ownership of this card to the player
             Return the card given to the player
         '''
+        if len(self.drawPile.cards) == 5:
+            self.reShuffleCards()
         print("giving ", player.playerID, "a card")
+
         topCard = self.drawPile.popTopCard()
         self.cardManager.moveCard(topCard, player)
         player.addCard(topCard)
         return topCard
+    def reShuffleCards(self):
+        '''
+            move discardPile to drawpile except the top one.
+        '''
+
+        for card in self.discardPile.cards[:-5]:
+            self.cardManager.moveCard(card, self.drawPile)
+
+        self.drawPile.cards = self.discardPile.cards[:-5]
+        self.discardPile.cards = self.discardPile.cards[-5:]
+
+        self.__checkCardConsistency__()
 
     def getPlayerByID(self, playerID: str):
         '''
@@ -376,9 +451,12 @@ class Game:
         # generate a deck of cards
         cardColours = ["red", "green", "blue", "yellow"]
         cardTypes = ["0", "1", "2", "3", "4", "5", "6", "7", "8",
-                     "9", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+                     "9", "1", "2", "3", "4", "5", "6", "7", "8", "9","add2","add2","turn","turn","forbid","forbid"]
+        blackCardsInfo = [("black","add4"),("black","change"),("black","add4"),("black","change"),("black","add4"),("black","change"),("black","add4"),("black","change")]
         cards = [NumberCard(cardColour, cardType, -1)
                  for cardColour in cardColours for cardType in cardTypes]
+        for blackCardInfo in blackCardsInfo:
+            cards.append(NumberCard(blackCardInfo[0],blackCardInfo[1],-1))
         # set id for each card
         for i in range(len(cards)):
             cards[i].cardID = i
@@ -408,6 +486,21 @@ class Game:
         self.discardPile.pushCardOnTop(firstCard)
         print(f"draw the first card: {firstCard}")
 
+    def changeDirection(self):
+        self.playDirection *= -1
+
+    def forbidNextPlayer(self):
+        self.currentPlayerIndex = (
+                self.currentPlayerIndex + self.playDirection) % self.countPlayer
+    def giveNextPlayerCards(self, numberOfCards):
+        '''
+            give the next player of self.currentPlayer numberOfCards cards
+        '''
+        nextPlayer = self.players[self.currentPlayerIndex + self.playDirection]
+        for _ in range(numberOfCards):
+            self.givePlayerCard(nextPlayer)
+        self.__checkCardConsistency__()
+
     def run(self):
 
         # play the game
@@ -415,7 +508,7 @@ class Game:
         while isGameOver == False:
             # Set the current player
             self.currentPlayerIndex = (
-                self.currentPlayerIndex + 1) % self.countPlayer
+                self.currentPlayerIndex + self.playDirection) % self.countPlayer
             self.currentPlayer: Player = self.players[self.currentPlayerIndex]
             currentPlayer = self.currentPlayer
             # self.userInterFace.renderOutput("computer is playing")
@@ -429,6 +522,7 @@ class Game:
             # check if the top card in discard Pile is forbid, if so, set currentPlayer tobe the next player
             # inplement in future
             #
+            
             #
             #
             #
@@ -461,13 +555,13 @@ class Game:
                     # this could be pygame animation
                     self.userInterFace.renderOutput(
                         f"you swapped a card, old card: {str(cardToSwap)}, new card: {str(cardSwapped)}")
-                    time.sleep(3)
+                    time.sleep(SLEEPTIME)
 
                 # this could be pygame animation
                 else:
                     self.userInterFace.renderOutput(
                         f"{currentPlayer.getID()} swapped a card")
-                    time.sleep(3)
+                    time.sleep(SLEEPTIME)
 
             # ***************rendering animation over***************
             #
@@ -503,11 +597,11 @@ class Game:
                 if currentPlayer.isHuman:
                     self.userInterFace.renderOutput(
                         f"Your played this card: {str(cardToPlay)}")
-                    time.sleep(3)
+                    time.sleep(SLEEPTIME)
                 else:
                     self.userInterFace.renderOutput(
                         f"{currentPlayer.getID()} played this card: {str(cardToPlay)}")
-                    time.sleep(3)
+                    time.sleep(SLEEPTIME)
 
                 # 2.1***************rendering animation end***************
                 # if there is a winner, loop end; other wise keep looping
@@ -576,6 +670,20 @@ class Game:
         # game over, return result
 
     def getResult(self):
+        print("GAME OVER")
+        print("GAME OVER")
+        print("GAME OVER")
+        print("GAME OVER")
+        print("GAME OVER")
+        print("GAME OVER")
+        print("GAME OVER")
+        print("GAME OVER")
+        print("GAME OVER")
+        print("GAME OVER")
+        print("GAME OVER")
+        print("GAME OVER")
+        print("GAME OVER")
+        print("GAME OVER")
         winner = [player for player in self.players if len(
             player.cards) == 0][0]
         losers = [player for player in self.players if len(player.cards) != 0]

@@ -37,3 +37,4 @@ gameResult = {"winner": [{"ID": "player1"}],
                          {"ID": "player1", "score": 15, "cards": ["green-5", "change-colour"]}]}
 dashboard = DashBoard(screen, gameResult)
 dashboard.run()
+
