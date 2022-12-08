@@ -11,6 +11,9 @@ class UserInterface:
         self.screen = self.game.screen
 
     def waitUserInput(self, candidateInput: list, hint):
+        '''
+            re
+        '''
         print("it is your turn to:"+hint)
         while True:
             for event in pygame.event.get():
@@ -22,6 +25,26 @@ class UserInterface:
 
             self.renderOutput("it is your turn to:"+hint)
 
+    def waitUserChooseColour(self):
+        '''
+            return : a string in ['blue','green','red','yellow']
+        '''
+        while True:
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+                if event.type ==KEYDOWN:
+                    if event.unicode == 'b':
+                        return 'blue'
+                    if event.unicode == 'g':
+                        return 'green'
+                    if event.unicode == 'y':
+                        return 'yellow'
+                    if event.unicode == 'r':
+                        return 'red'
+            
+            self.renderOutput("it is your turn to: choose the colour of the black card")
+    
     def renderHint(self, hint):
         hintLabel = Label(hint, (100, 50), 50, "black")
         hintLabel.draw(self.screen)
@@ -31,6 +54,9 @@ class UserInterface:
         hintLabel.draw(self.screen)
         hintLabel2 = Label(
             "press 0 draw a card or skip the turn", (600, 200), 50, "black")
+        hintLabel2.draw(self.screen)
+        hintLabel2 = Label(
+            "press r chose red, b chose blue, g chose green, y chose yellow", (600, 250), 50, "black")
         hintLabel2.draw(self.screen)
 
     def renderPlayersCards(self):
