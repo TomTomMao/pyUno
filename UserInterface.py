@@ -10,30 +10,56 @@ class UserInterface:
         self.game = game
         self.screen = self.game.screen
 
+        # a list of user's hand
+
     def waitUserInput(self, candidateInput: list, hint):
+        userHand = self.game.getPlayerByID("player0").cards
         '''
-            re
+            candidateInput: a list of numbers that refer to the index of the legal cards in the userHand
+                If there is no -1 in the list, it is waiting for the user choose the card to swap.
+                The possible minimun number of candidateInput is -1 (which means not play a card)
+                The possible maximun number of candidateInput is len(self.userHand) - 1 
+            hint: hint text that would display on the screen
+            According to the user's input(either mouse or keyboard) at pygame, 
+                Return an int that is the index of the card in self.userHand that the user wish to choose if the int is in the candidateInput.
+            Return -1 if user don't want play a card AND if -1 is in candidateInput.(Note: The user may or may not draw a new card.)
         '''
-        print("it is your turn to:"+hint)
+        print(hint)
+        print(candidateInput)
+        # ignore the event that was not raised here
+
+        for event in pygame.event.get():
+            pass
         while True:
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
                 if event.type == KEYDOWN:
-                    if event.unicode in candidateInput:
-                        return event.unicode
+                    print(
+                        f"--------------------user key:{event.unicode}-------------")
+                    if event.unicode == "0" and -1 in candidateInput:
+                        return -1
+                    elif event.unicode in [str(i+1) for i in candidateInput]:
+                        return int(event.unicode)-1
+                    else:
+                        print("Please make a valid decision")
 
-            self.renderOutput("it is your turn to:"+hint)
+            self.renderOutput(hint)
 
     def waitUserChooseColour(self):
         '''
+            According to the user's input in pygame,
             return : a string in ['blue','green','red','yellow']
         '''
+
+        # ignore the event that was not raised here
+        for event in pygame.event.get():
+            pass
         while True:
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
-                if event.type ==KEYDOWN:
+                if event.type == KEYDOWN:
                     if event.unicode == 'b':
                         return 'blue'
                     if event.unicode == 'g':
@@ -42,21 +68,22 @@ class UserInterface:
                         return 'yellow'
                     if event.unicode == 'r':
                         return 'red'
-            
-            self.renderOutput("it is your turn to: choose the colour of the black card")
-    
+
+            self.renderOutput(
+                "it is your turn to: choose the colour of the black card")
+
     def renderHint(self, hint):
         hintLabel = Label(hint, (100, 50), 50, "black")
         hintLabel.draw(self.screen)
 
     def renderKeyInfo(self):
-        hintLabel = Label("press 1 to 9 choose chard", (600, 150), 50, "black")
+        hintLabel = Label("press 1 to 9 choose chard", (500, 150), 30, "black")
         hintLabel.draw(self.screen)
         hintLabel2 = Label(
-            "press 0 draw a card or skip the turn", (600, 200), 50, "black")
+            "press 0 draw a card or skip the turn", (500, 200), 30, "black")
         hintLabel2.draw(self.screen)
         hintLabel2 = Label(
-            "press r chose red, b chose blue, g chose green, y chose yellow", (600, 250), 50, "black")
+            "press r chose red, b chose blue, g chose green, y chose yellow", (500, 250), 30, "black")
         hintLabel2.draw(self.screen)
 
     def renderPlayersCards(self):
@@ -65,9 +92,11 @@ class UserInterface:
             if player.isHuman:
                 colour = "Black"
                 humanPlayerLable = Label(
-                    "You" + ": " + str(player.cards), (700, 700), 25, colour
+                    "You" + ": " + str(player.cards), (300, 700), 25, colour
                 )
                 humanPlayerLable.draw(self.screen)
+
+                # the left-up corner that display all the players ">"refer to the current player
                 if player is self.game.currentPlayer:
                     playerLable = Label(
                         ">" + player.getID() + ": " +
@@ -105,8 +134,11 @@ class UserInterface:
         drawPileCountLable.draw(self.screen)
 
     def renderDiscardPile(self):
+        topCard = self.game.discardPile.showTopCard()  # the top card on the discard pile
+        topCardColour, topCardType, topCardChosenColour = topCard.cardColour, topCard.type, topCard.chosenColour
+        # print(topCardColour, topCardType, topCardChosenColour)
         discardPileLabel = Label(
-            f"Top Card of Discard Pile: {self.game.discardPile.showTopCard()}", (400, 500), 30, "blue")
+            f"Top Card of Discard Pile: {topCard}", (400, 500), 30, "blue")
         discardPileLabel.draw(self.screen)
 
     def renderOutput(self, hint):
