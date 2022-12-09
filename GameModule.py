@@ -5,7 +5,9 @@ from pygame.locals import *
 import time
 from UserInterface import UserInterface
 
-SLEEPTIME=0.1
+SLEEPTIME = 0.1
+
+
 class CardBase:
     def __init__(self) -> None:
         pass
@@ -18,36 +20,35 @@ class CardBase:
         '''
 
         if cardToPlay.cardColour == "black":
-                return True
-        if topDiscardCard.cardColour!="black":            
+            return True
+        if topDiscardCard.cardColour != "black":
             print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!a")
-            print("top: cardColour:",topDiscardCard.cardColour)
-            print("top: chosenColour:",topDiscardCard.chosenColour)
-            print("toplay: cardColour:",cardToPlay.cardColour)
-            print("toplay: chosenColour:",cardToPlay.chosenColour)
-            print(topDiscardCard.type == cardToPlay.type or topDiscardCard.cardColour == cardToPlay.cardColour)
+            print("top: cardColour:", topDiscardCard.cardColour)
+            print("top: chosenColour:", topDiscardCard.chosenColour)
+            print("toplay: cardColour:", cardToPlay.cardColour)
+            print("toplay: chosenColour:", cardToPlay.chosenColour)
+            print(topDiscardCard.type ==
+                  cardToPlay.type or topDiscardCard.cardColour == cardToPlay.cardColour)
             print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!a")
             return topDiscardCard.type == cardToPlay.type or topDiscardCard.cardColour == cardToPlay.cardColour
-        else: 
-            
+        else:
+
             print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!b")
-            print("top: cardColour:",topDiscardCard.cardColour)
-            print("top: chosenColour:",topDiscardCard.chosenColour)
-            print("toplay: cardColour:",cardToPlay.cardColour)
-            print("toplay: chosenColour:",cardToPlay.chosenColour)
+            print("top: cardColour:", topDiscardCard.cardColour)
+            print("top: chosenColour:", topDiscardCard.chosenColour)
+            print("toplay: cardColour:", cardToPlay.cardColour)
+            print("toplay: chosenColour:", cardToPlay.chosenColour)
             print(topDiscardCard)
             print(cardToPlay)
-            print(topDiscardCard.type == cardToPlay.type or topDiscardCard.chosenColour == cardToPlay.cardColour)
+            print(topDiscardCard.type ==
+                  cardToPlay.type or topDiscardCard.chosenColour == cardToPlay.cardColour)
             print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!b")
             return topDiscardCard.type == cardToPlay.type or topDiscardCard.chosenColour == cardToPlay.cardColour
-
 
     def getImage(self):
         '''
             return an image object
         '''
-    
-
 
 
 class NumberCard(CardBase):
@@ -57,11 +58,11 @@ class NumberCard(CardBase):
         # cardID: a number
 
         self.cardColour = cardColour  # a string
-        self.chosenColour = cardColour # string
+        self.chosenColour = cardColour  # string
         self.type = cardType  # a string
         self.cardID = "card" + str(cardID)  # a string
         self.value = {'green': 1, 'red': 2, 'yellow': 3,
-                      'blue': 4, 'black':5}[cardColour]*{"0":0,"1":1,"2":2,"3":3,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9,"add2":15,"forbid":15,"turn":15,"add4":30,"change":30}[cardType]
+                      'blue': 4, 'black': 5}[cardColour]*{"0": 0, "1": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "add2": 15, "forbid": 15, "turn": 15, "add4": 30, "change": 30}[cardType]
 
     def __repr__(self):
         if self.cardColour == "black":
@@ -77,6 +78,7 @@ class NumberCard(CardBase):
             change self.chosenColour to the new Colour
         '''
         self.chosenColour = newColour
+
 
 class Owner:
     '''
@@ -124,14 +126,11 @@ class Player(Owner):
             print(self.playerID + "is swapping card")
             return (self.cards[random.randint(0, len(self.cards)-1)])
         while True:
+            candidateInput = [i for i in range(0, len(self.cards))]
             userInput = userInterface.waitUserInput(
-                [str(i) for i in range(1, 10)], "swap card.")
+                candidateInput, "swap card.")
             indexOfCard = int(userInput)
-
-            if indexOfCard < len(self.cards) + 1:
-                return (self.cards[indexOfCard - 1])
-
-            userInterface.renderOutput("Please choose a valid card")
+            return (self.cards[indexOfCard])
 
     def playCard(self, game, topDiscardCard, userInterface):
         '''4
@@ -140,14 +139,15 @@ class Player(Owner):
             If play a card, return the valid card player choosed
             If choose not to play a card, return False
         '''
-        if self.isHuman == False: # AI
+        if self.isHuman == False:  # AI
             print(self.playerID + "is playing card")
             validCards = [card for card in self.cards if CardBase.checkCard(
                 topDiscardCard, card)]
             if len(validCards) > 0:
                 cardToPlay = random.choice(validCards)
                 if cardToPlay.cardColour == "black":
-                    cardToPlay.choseColour(random.choice(["red","blue","green","yellow"]))
+                    cardToPlay.choseColour(random.choice(
+                        ["red", "blue", "green", "yellow"]))
                 print(self.playerID + f"decide to play {cardToPlay}")
                 if cardToPlay.type == "turn":
                     game.changeDirection()
@@ -163,19 +163,22 @@ class Player(Owner):
                       "decide not to play any card, and it would draw a card")
                 return False
 
-        while True: # user
+        while True:  # user
+            candidateInput = [i for i in range(
+                -1, len(self.cards)) if CardBase.checkCard(topDiscardCard, self.cards[i]) or i == -1]
             userInput = userInterface.waitUserInput(
-                [str(i) for i in range(0, 10)], "play a card."
-            )
+                candidateInput, "play a card.")
+
             indexOfCard = int(userInput)
-            if indexOfCard == 0:  # press 0 to not play a card
+            if indexOfCard == -1:  # press 0 to not play a card
                 return False
-            elif indexOfCard < len(self.cards) + 1:
-                cardToPlay = self.cards[indexOfCard - 1]
+            else:
+                cardToPlay = self.cards[indexOfCard]
                 print("cardToPlay:", cardToPlay)
                 if CardBase.checkCard(topDiscardCard, cardToPlay):
-                    if (cardToPlay.cardColour=="black"):
-                        cardToPlay.choseColour(userInterface.waitUserChooseColour())
+                    if (cardToPlay.cardColour == "black"):
+                        cardToPlay.choseColour(
+                            userInterface.waitUserChooseColour())
                     if cardToPlay.type == "turn":
                         game.changeDirection()
                     if cardToPlay.type == "forbid":
@@ -389,6 +392,7 @@ class Game:
         self.cardManager.moveCard(topCard, player)
         player.addCard(topCard)
         return topCard
+
     def reShuffleCards(self):
         '''
             move discardPile to drawpile except the top one.
@@ -451,12 +455,13 @@ class Game:
         # generate a deck of cards
         cardColours = ["red", "green", "blue", "yellow"]
         cardTypes = ["0", "1", "2", "3", "4", "5", "6", "7", "8",
-                     "9", "1", "2", "3", "4", "5", "6", "7", "8", "9","add2","add2","turn","turn","forbid","forbid"]
-        blackCardsInfo = [("black","add4"),("black","change"),("black","add4"),("black","change"),("black","add4"),("black","change"),("black","add4"),("black","change")]
+                     "9", "1", "2", "3", "4", "5", "6", "7", "8", "9", "add2", "add2", "turn", "turn", "forbid", "forbid"]
+        blackCardsInfo = [("black", "add4"), ("black", "change"), ("black", "add4"), ("black", "change"),
+                          ("black", "add4"), ("black", "change"), ("black", "add4"), ("black", "change")]
         cards = [NumberCard(cardColour, cardType, -1)
                  for cardColour in cardColours for cardType in cardTypes]
         for blackCardInfo in blackCardsInfo:
-            cards.append(NumberCard(blackCardInfo[0],blackCardInfo[1],-1))
+            cards.append(NumberCard(blackCardInfo[0], blackCardInfo[1], -1))
         # set id for each card
         for i in range(len(cards)):
             cards[i].cardID = i
@@ -491,12 +496,14 @@ class Game:
 
     def forbidNextPlayer(self):
         self.currentPlayerIndex = (
-                self.currentPlayerIndex + self.playDirection) % self.countPlayer
+            self.currentPlayerIndex + self.playDirection) % self.countPlayer
+
     def giveNextPlayerCards(self, numberOfCards):
         '''
             give the next player of self.currentPlayer numberOfCards cards
         '''
-        nextPlayer = self.players[self.currentPlayerIndex + self.playDirection]
+        nextPlayer = self.players[(
+            self.currentPlayerIndex + self.playDirection) % self.countPlayer]
         for _ in range(numberOfCards):
             self.givePlayerCard(nextPlayer)
         self.__checkCardConsistency__()
@@ -522,7 +529,7 @@ class Game:
             # check if the top card in discard Pile is forbid, if so, set currentPlayer tobe the next player
             # inplement in future
             #
-            
+
             #
             #
             #
