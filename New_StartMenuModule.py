@@ -7,7 +7,7 @@ class StartMenu:
     def __init__(self, screen):
         self.screen = screen
         self.hintLabel = Label(
-            'Press number of ai players(1 to 7)', (100, 100), 72, 'green')
+            'Choose the number of ai players', (200, 100), 70, 'green')
         print("label setted up")
 
     def run(self):
@@ -41,13 +41,12 @@ class StartMenu:
 
            #This font comes from the font encyclopedia of the Internet,
             # this is the URL of the font source: "https: // www.fonts.net.cn / fonts - en / tag - katong - 1.html"
-            font = pygame.font.Font('/Users/lizongzhe/Desktop/Nottingham/pythonProject/coursework/HFPuff/HFPuff-2.ttf',
-                                    70)
+            font = pygame.font.Font('/HFPuff/HFPuff-2.ttf',70)
             GREEN = (0, 255, 0)
             BLUE = (0, 0, 255)
             BLACK = (0, 0, 0)
 
-            text = font.render('Choose the number of battle robots', True, (0, 0, 255), (0, 255, 0))
+            text = font.render('Choose the number of ai players', True, (0, 0, 255), (0, 255, 0))
             text1 = font.render('2', True, (0, 0, 255), (0, 255, 0))
             text2 = font.render('3', True, (0, 0, 255), (0, 255, 0))
             text3 = font.render('4', True, (0, 0, 255), (0, 255, 0))
