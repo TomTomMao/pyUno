@@ -41,7 +41,7 @@ class StartMenu:
 
            #This font comes from the font encyclopedia of the Internet,
             # this is the URL of the font source: "https: // www.fonts.net.cn / fonts - en / tag - katong - 1.html"
-            font = pygame.font.Font('/HFPuff/HFPuff-2.ttf',70)
+            font = pygame.font.Font('./fonts/times new roman bold italic.ttf', 70)
             GREEN = (0, 255, 0)
             BLUE = (0, 0, 255)
             BLACK = (0, 0, 0)

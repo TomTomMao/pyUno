@@ -28,7 +28,7 @@ class DashBoard:
             Note: player0 is the User, the rest players are the player
         '''
 
-        font = pygame.font.Font('/HFPuff/HFPuff-2.ttf', 70)
+        font = pygame.font.Font('./fonts/times new roman bold italic.ttf', 70)
 
         text1 = font.render('"Winner =" ,"self.winner"', True, (0, 0, 255), (0, 255, 0))
         text2 = font.render('"Loser=" ,"self.losers"', True, (0, 0, 255), (0, 255, 0))

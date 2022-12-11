@@ -80,6 +80,9 @@ class NumberCard(CardBase):
         self.chosenColour = newColour
 
 
+    def get_colour_type(self):
+        return self.cardColour + '-' + str(self.type)
+
 class Owner:
     '''
     A class that would be input into a CardManager Object
@@ -380,7 +383,7 @@ class Game:
             # assume self.drawpile is not None (not use this)
             assume there is at least a card in the self.drawPile
             assume self.discardPile is not None
-            Shuffle the cards of self.discardPile except the top one., put them into the self.drawPile, if len(self.drawPile) = 5, 
+            Shuffle the cards of self.discardPile except the top one., put them into the self.drawPile, if len(self.drawPile) = 5,
             Remove the first card from self.drawPile
             Delete the ownership between this card and the self.draWPile
             Assign the ownership of this card to the player
