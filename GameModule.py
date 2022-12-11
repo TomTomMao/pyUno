@@ -204,6 +204,8 @@ class DrawPile(Owner):
 
         random.shuffle(self.cards)
         self.drawPileID = "drawPile"
+        while self.cards[-1].cardColour == 'black':
+            random.shuffle(self.cards)
 
     def count(self):
         '''
