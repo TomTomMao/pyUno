@@ -6,7 +6,6 @@ from pygame.locals import *
 
 
 class DashBoard:
-
     def __init__(self, screen, returnValue):
 
         #                  returnValue={"winner":[{"ID":"player1"}],
@@ -19,6 +18,7 @@ class DashBoard:
         self.winner = returnValue["winner"]  # length = 1
         self.losers = returnValue["losers"]  # length from 1 to 7
 
+
     def run(self):
         '''
             Render a gameover screen which displays players' information, use the information from self.winner and self.losers
@@ -27,6 +27,7 @@ class DashBoard:
             Return: True if the user decides to play a new turn.
             Note: player0 is the User, the rest players are the player
         '''
+
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = event.pos
@@ -37,13 +38,17 @@ class DashBoard:
                     return True
 
         print(self.winner)  # debug
+
+        def get_score (element):
+            return element['score']
+
+        self.losers.sort(key= get_score)
         print(self.losers)  # debug
 
         font = pygame.font.Font('/Users/lizongzhe/Desktop/Nottingham/pythonProject/coursework/HFPuff/HFPuff-2.ttf',
                                 70)
-        text1 = font.render('"Winner =" ,"gameResult[winner]"', True, (0, 0, 255), (0, 255, 0))
-        text2 = font.render('"Loser=" ,"gemeResult[losers]"', True, (0, 0, 255), (0, 255, 0))
-
+        text1 = font.render('"Winner =" ,"self.winner"', True, (0, 0, 255), (0, 255, 0))
+        text2 = font.render('"Loser=" ,"self.losers"', True, (0, 0, 255), (0, 255, 0))
         text3 = font.render('A New Round ', True, (0, 0, 255), (0, 255, 0))
         text4 = font.render('Quit', True, (0, 0, 255), (0, 255, 0))
 
@@ -52,10 +57,13 @@ class DashBoard:
         self.screen.blit(text3, (300, 600))
         self.screen.blit(text4, (900, 600))
 
-    screen = pygame.display.set_mode((1500, 750))
+        pygame.display.flip()
 
-    gameResult = {"winner": [{"ID": "player1"}],
+
+screen = pygame.display.set_mode((1500, 750))
+
+gameResult = {"winner": [{"ID": "player1"}],
                   "losers": [{"ID": "player0", "score": 5, "cards": ["red-1", "blue-2"]},
                              {"ID": "player1", "score": 15, "cards": ["green-5", "change-colour"]}]}
-    dashboard = DashBoard(screen, gameResult)
-    dashboard.run()
+dashboard = DashBoard(screen, gameResult)
+dashboard.run()
