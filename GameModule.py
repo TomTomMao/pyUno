@@ -5,7 +5,7 @@ from pygame.locals import *
 import time
 from UserInterface import UserInterface
 
-SLEEPTIME = 0.1
+SLEEPTIME = 1
 
 
 class CardBase:
@@ -133,7 +133,7 @@ class Player(Owner):
         while True:
             candidateInput = [i for i in range(0, len(self.cards))]
             userInput = userInterface.waitUserInput(
-                candidateInput, "swap card.")
+                candidateInput, "swap card")
             indexOfCard = int(userInput)
             return (self.cards[indexOfCard])
 
