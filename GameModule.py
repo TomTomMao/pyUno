@@ -80,6 +80,9 @@ class NumberCard(CardBase):
         self.chosenColour = newColour
 
 
+    def get_colour_type(self):
+        return self.cardColour + '-' + str(self.type)
+
 class Owner:
     '''
     A class that would be input into a CardManager Object
