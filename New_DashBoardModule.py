@@ -45,8 +45,8 @@ class DashBoard:
         self.losers.sort(key= get_score)
         print(self.losers)  # debug
 
-        font = pygame.font.Font('/Users/lizongzhe/Desktop/Nottingham/pythonProject/coursework/HFPuff/HFPuff-2.ttf',
-                                70)
+        font = pygame.font.Font('/Users/lizongzhe/Desktop/Nottingham/pythonProject/coursework/HFPuff/HFPuff-2.ttf', 70)
+
         text1 = font.render('"Winner =" ,"self.winner"', True, (0, 0, 255), (0, 255, 0))
         text2 = font.render('"Loser=" ,"self.losers"', True, (0, 0, 255), (0, 255, 0))
         text3 = font.render('A New Round ', True, (0, 0, 255), (0, 255, 0))
@@ -60,10 +60,8 @@ class DashBoard:
         pygame.display.flip()
 
 
-screen = pygame.display.set_mode((1500, 750))
+#screen = pygame.display.set_mode((1500, 750))
 
-gameResult = {"winner": [{"ID": "player1"}],
-                  "losers": [{"ID": "player0", "score": 5, "cards": ["red-1", "blue-2"]},
-                             {"ID": "player1", "score": 15, "cards": ["green-5", "change-colour"]}]}
-dashboard = DashBoard(screen, gameResult)
-dashboard.run()
+#gameResult = {"winner": [{"ID": "player1"}],"losers": [{"ID": "player0", "score": 5, "cards": ["red-1", "blue-2"]},{"ID": "player1", "score": 15, "cards": ["green-5", "change-colour"]}]}
+#dashboard = DashBoard(screen, gameResult)
+#dashboard.run()
