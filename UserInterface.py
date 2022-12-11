@@ -46,7 +46,7 @@ class UserInterface:
                                 pre_x = 300 + 90 * i
                                 suc_x = pre_x + 85
 
-                                if 700 <= pos_x <= 700 + 85 and 150 <= pos_y <= 150 + 115 and -1 in candidateInput:
+                                if 150 <= pos_x <= 150 + 64 and 500 <= pos_y <= 500 + 64 and -1 in candidateInput:
                                     return -1
                                 if pre_x <= pos_x <= suc_x and 580 <= pos_y <= 580 + 115:
                                     key = str(i + 1)
@@ -184,10 +184,11 @@ class UserInterface:
         screen = self.game.screen
 
         # screen.fill(pygame.Color("gray"))  # draw background
-        screen.blit(pygame.image.load("./Images/background.jpeg"), (0, 0))
+        screen.blit(pygame.image.load("./Images/background1.jpg"), (0, 0))
 
-        # self.renderKeyInfo()
+        self.renderKeyInfo()
         self.screen.blit(pygame.image.load('./Images/UNOButton.png'), (150, 600))
+        self.screen.blit(pygame.image.load('./Images/checked.png'), (150, 500))
         self.renderPlayersCards()
         self.renderDrawPile()
         self.renderDiscardPile()
