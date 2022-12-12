@@ -5,7 +5,7 @@ from pygame.locals import *
 import time
 from UserInterface import UserInterface
 
-SLEEPTIME = 0.1
+SLEEPTIME = 1.5
 
 
 class CardBase:
