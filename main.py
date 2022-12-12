@@ -20,14 +20,25 @@ def main():
         countAI = startMenu.run()
 
         print("number of AI:", countAI)
+
+        # This music is downloaded from the website: https://audionautix.com/
+        # Initialize the bgm
+        pygame.mixer.init()
+        pygame.mixer.music.load("./Audio/90SecondsOfFunk.mp3")
+        pygame.mixer.music.play(-1)
+        pygame.mixer.music.set_volume(0.2)
+
         newGame = Game(screen, countAI)  # create game object
         # Run the game loop, when gameover, return scores.
         newGame.initialize()
         scores = newGame.run()
 
+
         dashBoard = DashBoard(screen, scores)  # create dashBoard
+        pygame.mixer.music.stop()
         programRunning = dashBoard.run()  # run the dashBoard
     print("PROGRAM ENDED")
 
 
-main()
+if __name__ == '__main__':
+    main()
