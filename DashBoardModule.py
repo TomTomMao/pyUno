@@ -15,9 +15,24 @@ class DashBoard:
         #                                       ]
         #                              }
         self.screen = screen  # size: 1500*750
-        self.winner = returnValue["winner"]  # length = 1
-        self.losers = returnValue["losers"]  # length from 1 to 7
+        winner_dict = returnValue["winner"][0]
+        winner_info = winner_dict["ID"]
+        self.winner = winner_info  # length = 1
+
+        # Take out the players and scores stored in the list dictionary
+        losers_dict = returnValue["losers"]
+        losers_dict.sort(key=lambda key: key['score'], reverse=True)
+        losers_list = []
+        for i in range(len(losers_dict)):
+            info = losers_dict[i]["ID"] + "   " + "score: " + str(losers_dict[i]["score"])
+            losers_list.append(info)
+        # Store the retrieved information to the loser
+        self.losers = losers_list  # length from 1 to 7
         pygame.font.init()
+
+
+        imagePath = './Images/GameOver.jpg'
+        self.screen.blit(pygame.image.load(imagePath), (0, 0))
 
     def run(self):
         '''
@@ -27,42 +42,44 @@ class DashBoard:
             Return: True if the user decides to play a new turn.
             Note: player0 is the User, the rest players are the player
         '''
+        # This font is downloaded from the website: https://freefontsfamily.com
+        font = pygame.font.Font('./Fonts/times new roman bold italic.ttf', 40)
+        # This font is downloaded from the website: https://font.chinaz.com
+        font2 = pygame.font.Font('./Fonts/farmbright.ttf', 150)
+        #
+        text1 = font.render("Winner " + str(self.winner), True, (65, 105, 225))
+        text2 = font2.render("Game  over", True, (220, 226, 241))
+        text3 = font.render('A New Round ', False, (255, 255, 255))
+        text4 = font.render('Quit', True, (255, 255, 255))
 
-        font = pygame.font.Font('./fonts/times new roman bold italic.ttf', 70)
 
-        text1 = font.render('"Winner =" ,"self.winner"', True, (0, 0, 255), (0, 255, 0))
-        text2 = font.render('"Loser=" ,"self.losers"', True, (0, 0, 255), (0, 255, 0))
-        text3 = font.render('A New Round ', True, (0, 0, 255), (0, 255, 0))
-        text4 = font.render('Quit', True, (0, 0, 255), (0, 255, 0))
-        def get_score (element):
-            return element['score']
 
         while True:
             for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     x, y = event.pos
-                    if 300 < x < 300+ 100 and 600 < y < 600 + 100:
-                        num_player = 2
-                        return False
-                    elif 900 < x < 900 + 100 and 600 < y < 600 + 100:
+                    if 300 < x < 300 + 100 and 600 < y < 600 + 100:
                         return True
+                    elif 900 < x < 900 + 100 and 600 < y < 600 + 100:
+                        return False
 
-            print(self.winner)  # debug
-
-
-            self.losers.sort(key= get_score)
-            print(self.losers)  # debug
-
-            self.screen.blit(text1, (400, 100))
-            self.screen.blit(text2, (400, 200))
+            self.screen.blit(text1, (100, 100))
+            self.screen.blit(text2, (800, 150))
             self.screen.blit(text3, (300, 600))
             self.screen.blit(text4, (900, 600))
 
+            x, y = 100, 180
+            for i in range(len(self.losers)):
+                text = font.render("Loser  " + self.losers[i], True, (65, 105, 225))
+                self.screen.blit(text, (x, y))
+                y += 50
+
             pygame.display.flip()
 
+# screen = pygame.display.set_mode((1500, 750))
 
-#screen = pygame.display.set_mode((1500, 750))
-
-#gameResult = {"winner": [{"ID": "player1"}],"losers": [{"ID": "player0", "score": 5, "cards": ["red-1", "blue-2"]},{"ID": "player1", "score": 15, "cards": ["green-5", "change-colour"]}]}
-#dashboard = DashBoard(screen, gameResult)
-#dashboard.run()
+# gameResult = {"winner": [{"ID": "player1"}],"losers": [{"ID": "player0", "score": 5, "cards": ["red-1", "blue-2"]},{"ID": "player1", "score": 15, "cards": ["green-5", "change-colour"]}]}
+# dashboard = DashBoard(screen, gameResult)
+# dashboard.run()
