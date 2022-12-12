@@ -103,7 +103,7 @@ class UserInterface:
                     if event.unicode == 'r':
                         return 'red'
 
-            self.renderOutput("it is your turn to: choose the colour of the black card")
+            self.renderOutput("it is your turn to: choose the colour of the black card", showKeyInfo=True)
 
     def renderHint(self, hint):
         hintLabel = Label(hint, (400, 500), 40, "white")
@@ -179,13 +179,13 @@ class UserInterface:
         imagePath = './Images/' + str(topCard) + '.png'
         self.screen.blit(pygame.image.load(imagePath), (640, 45))
 
-    def renderOutput(self, hint, showUNOButton=False, showCheckedButton=False):
+    def renderOutput(self, hint, showUNOButton=False, showCheckedButton=False, showKeyInfo=False):
         screen = self.game.screen
 
         # screen.fill(pygame.Color("gray"))  # draw background
         screen.blit(pygame.image.load("./Images/background1.jpg"), (0, 0))
 
-        # self.renderKeyInfo()
+        showKeyInfo and self.renderKeyInfo()
         if showUNOButton:
             self.screen.blit(pygame.image.load('./Images/UNO_button.png'), (20, 610))
         if showCheckedButton:
@@ -194,5 +194,4 @@ class UserInterface:
         self.renderDrawPile()
         self.renderDiscardPile()
         self.renderHint(hint)
-
         pygame.display.flip()
