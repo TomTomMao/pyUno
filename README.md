@@ -32,3 +32,26 @@ In the loop:
 3. Then, game.run() which run a loop for the game kernal would be called after the game is initialized. In this run(), the game would call UserInterface.waitUserInput() and UserInterface.waitUserChooseColour and UserInterface.renderOutput whenever needed. The two waiting function would keep refreshing the pygame screen and return the user's decision, the render function would render the screen.<br />
 4. Once the the game kernal noticed that there is a winner, it would return a data to main.py.<br />
 5. Then, main.py would pass this data into the DashBoard's Constructor. This dashBoard.run() would be called to render the infomation of the game result and wait for the user's choice of whether play a new round or quit the game. The choice would be return to main.py. If return false, the infinite loop in main.py would stop, the pygame screen would close. Otherwise, the infinite loop would go back to the '1.'<br />
+
+## ReferenceList：
+
+1. LabelModule.py 
+copied from Dr Daniel Karapetyan's example
+
+2. Fonts
+
+times new roman bold italic.ttf
+This font is downloaded from the website: https://freefontsfamily.com
+
+farmbright.ttf
+This font is downloaded from the website: https://font.chinaz.com
+
+3. Image
+
+duck.png duck1.png duck2.png duck3.png duck4.png
+These images are downloaded from the website: www.flaticon.com
+
+4. Audio
+
+90SecondsOfFunk.mp3
+This music is downloaded from the website: https://audionautix.com/
