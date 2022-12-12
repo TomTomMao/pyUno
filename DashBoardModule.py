@@ -1,9 +1,11 @@
+################################################################################
+This module is used to display the checkout screen and contains a checkout class
+################################################################################
 import pygame
 from StartMenuModule import StartMenu
 from GameModule import Game
 from LabelModule import Label
 from pygame.locals import *
-
 
 class DashBoard:
     def __init__(self, screen, returnValue):

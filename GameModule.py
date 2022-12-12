@@ -4,10 +4,7 @@ from LabelModule import Label
 from pygame.locals import *
 import time
 from UserInterface import UserInterface
-
 SLEEPTIME = 0.1
-
-
 class CardBase:
     def __init__(self) -> None:
         pass
