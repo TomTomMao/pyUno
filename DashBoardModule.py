@@ -43,9 +43,9 @@ class DashBoard:
             Note: player0 is the User, the rest players are the player
         '''
         # This font is downloaded from the website: https://freefontsfamily.com
-        font = pygame.font.Font('./Fonts/times new roman bold italic.ttf', 40)
+        font = pygame.font.Font('./fonts/times new roman bold italic.ttf', 40)
         # This font is downloaded from the website: https://font.chinaz.com
-        font2 = pygame.font.Font('./Fonts/farmbright.ttf', 150)
+        font2 = pygame.font.Font('./fonts/farmbright.ttf', 150)
         #
         text1 = font.render("Winner " + str(self.winner), True, (65, 105, 225))
         text2 = font2.render("Game  over", True, (220, 226, 241))

@@ -1,7 +1,3 @@
-# This is an initial version with 78 cards. Run main.py to play.
-Caveat: The label module is copied from Daniel's example.
-# This is an initial version with 78 cards. Run main.py to play.
-Caveat: The label module is copied from Daniel's example.
 Wentao Mao: Complete the game framework, implement the function of dealing cards and self-selecting the number of computer players, and implement the judgment of ordinary colour number cards under the simple ui interface.
 Hao Li: implemented the effect of colour function cards and black card function cards, and implemented the function of reshuffling discarded cards into the deck after it has been dealt.
 The above two people have independently implemented different uno programs with simple ui, and have jointly developed the logic part of the game in the main project

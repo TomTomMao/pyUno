@@ -8,7 +8,7 @@ class Label:
         self.pos = pos
         pygame.font.init()
         # This font is downloaded from the website: https://freefontsfamily.com
-        self.font = pygame.font.Font('./Fonts/times new roman bold italic.ttf', size)
+        self.font = pygame.font.Font('./fonts/times new roman bold italic.ttf', size)
         self.font_colour = pygame.Color(colour)
 
     def draw(self, screen):
