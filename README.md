@@ -25,7 +25,7 @@ main.py
 The main entrance of the game running
 
 ## How the program work?<br />
-The main.py would run a infinite loop. <br />
+The main.py would run an infinite loop. <br />
 In the loop:
 1. It would call startMenu.run() which would return the number of computer players that the user chosed.<br />
 2. Then, the number of computer players would be passed into the Game's constructor.<br />
